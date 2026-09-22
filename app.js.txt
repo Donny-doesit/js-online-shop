@@ -1,0 +1,9 @@
+const productName = "Classic T-Shirt";
+let price = 24.99;
+let inStock = true;
+const category = "Clothing";
+
+console.log("Product Name:", productName);
+console.log("Price:", price);
+console.log("In Stock:", inStock);
+console.log("Category:", category);
