@@ -49,10 +49,13 @@ console.log("Products:", products);
 
 // Add to Cart
 function addToCart(productName) {
+
+    // Finds the selected product
     const product = products.find(function(item) {
         return item.productName === productName;
     });
 
+    // Adds the product if it exists and is in stock
     if (product && product.inStock) {
         cart.push(product);
 
@@ -60,9 +63,13 @@ function addToCart(productName) {
         document.getElementById("cart-count").textContent = cart.length;
 
         console.log(product.productName + " was added to the cart.");
+
     } else if (product && !product.inStock) {
+
         console.log(product.productName + " is out of stock.");
+
     } else {
+
         console.log("Product not found.");
     }
 }
@@ -70,10 +77,13 @@ function addToCart(productName) {
 
 // View Cart
 const viewCart = function() {
+
     let total = 0;
 
+    // Goes through every product currently in the cart
     cart.forEach(function(item) {
         console.log(item.productName + ": $" + item.price);
+
         total += item.price;
     });
 
@@ -83,42 +93,49 @@ const viewCart = function() {
 
 // Filter by Category
 const filterByCategory = (category) => {
+
+    // Creates a new array containing products in the selected category
     const matchingProducts = products.filter(function(product) {
         return product.category === category;
     });
 
+    // Displays matching products in the console
     matchingProducts.forEach(function(product) {
         console.log(product.productName + ": $" + product.price);
     });
 
+    // Sends the matching products back
     return matchingProducts;
 };
 
 
 // Render Products
 function renderProducts(productsToDisplay) {
+
+    // Finds the product grid in the HTML
     const productGrid = document.getElementById("product-grid");
 
-    // Clears the current products from the webpage
+    // Clears products currently displayed
     productGrid.innerHTML = "";
 
-    // Goes through the array and creates a card for each product
+    // Creates one card for every product
     productsToDisplay.forEach(function(product) {
 
-        // Creates the product card
+        // Creates a new div for the product
         const productCard = document.createElement("div");
 
-        // Adds the product information to the card
+        // Adds product information
         productCard.innerHTML =
             "<h3>" + product.productName + "</h3>" +
             "<p>Category: " + product.category + "</p>" +
             "<p>Price: $" + product.price.toFixed(2) + "</p>";
 
-        // Creates an Add to Cart button
+        // Creates the Add to Cart button
         const addButton = document.createElement("button");
+
         addButton.textContent = "Add to Cart";
 
-        // Runs addToCart when the button is clicked
+        // Adds the product when the button is clicked
         addButton.addEventListener("click", function() {
             addToCart(product.productName);
         });
@@ -134,46 +151,62 @@ function renderProducts(productsToDisplay) {
 
 // Create Category Filters
 function createCategoryFilters() {
-    const filterContainer = document.getElementById("category-filters");
 
-    // Creates the All button
+    // Finds the category filter area in the HTML
+    const filterContainer =
+        document.getElementById("category-filters");
+
+
+    // ALL BUTTON
     const allButton = document.createElement("button");
+
     allButton.textContent = "All";
 
-    // Shows all products
     allButton.addEventListener("click", function() {
         renderProducts(products);
     });
 
-    // Creates the Candy Pineapple button
-    const pineappleButton = document.createElement("button");
+
+    // CANDY PINEAPPLE BUTTON
+    const pineappleButton =
+        document.createElement("button");
+
     pineappleButton.textContent = "Candy Pineapple";
 
-    // Shows only Candy Pineapple products
     pineappleButton.addEventListener("click", function() {
-        const filteredProducts = filterByCategory("Candy Pineapple");
+
+        const filteredProducts =
+            filterByCategory("Candy Pineapple");
+
         renderProducts(filteredProducts);
     });
 
-    // Creates the Drinks button
-    const drinksButton = document.createElement("button");
+
+    // DRINKS BUTTON
+    const drinksButton =
+        document.createElement("button");
+
     drinksButton.textContent = "Drinks";
 
-    // Shows only drink products
     drinksButton.addEventListener("click", function() {
-        const filteredProducts = filterByCategory("Drinks");
+
+        const filteredProducts =
+            filterByCategory("Drinks");
+
         renderProducts(filteredProducts);
     });
 
-    // Adds the filter buttons to the webpage
+
+    // Adds all three filter buttons to the webpage
     filterContainer.appendChild(allButton);
     filterContainer.appendChild(pineappleButton);
     filterContainer.appendChild(drinksButton);
 }
 
 
-// Creates category buttons
+// Creates the category filter buttons
 createCategoryFilters();
 
-// Displays all products when the page first loads
+
+// Displays all 6 products when the page loads
 renderProducts(products);
