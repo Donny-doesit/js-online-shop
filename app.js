@@ -38,6 +38,7 @@ function addToCart(productName) {
 
     if (product && product.inStock) {
         cart.push(product);
+        document.getElementById("cart-count").textContent = cart.length;
         console.log(product.productName + " was added to the cart.");
     } else if (product && !product.inStock) {
         console.log(product.productName + " is out of stock.");
