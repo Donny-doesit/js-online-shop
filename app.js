@@ -116,7 +116,46 @@ function renderProducts(productsToDisplay) {
         productGrid.appendChild(productCard);
     });
 }
+// Create Category Filters
+function createCategoryFilters() {
+    const filterContainer = document.getElementById("category-filters");
 
+    // Creates the All button
+    const allButton = document.createElement("button");
+    allButton.textContent = "All";
+
+    // Shows all products when All is clicked
+    allButton.addEventListener("click", function() {
+        renderProducts(products);
+    });
+
+    // Creates the Candy Pineapple button
+    const pineappleButton = document.createElement("button");
+    pineappleButton.textContent = "Candy Pineapple";
+
+    // Shows only Candy Pineapple products
+    pineappleButton.addEventListener("click", function() {
+        const filteredProducts = filterByCategory("Candy Pineapple");
+        renderProducts(filteredProducts);
+    });
+
+    // Creates the Drinks button
+    const drinksButton = document.createElement("button");
+    drinksButton.textContent = "Drinks";
+
+    // Shows only drink products
+    drinksButton.addEventListener("click", function() {
+        const filteredProducts = filterByCategory("Drinks");
+        renderProducts(filteredProducts);
+    });
+
+    // Adds the buttons to the webpage
+    filterContainer.appendChild(allButton);
+    filterContainer.appendChild(pineappleButton);
+    filterContainer.appendChild(drinksButton);
+}
+// Creates the category buttons
+createCategoryFilters();
 
 // Displays all products when the page first loads
 renderProducts(products);
