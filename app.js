@@ -14,20 +14,34 @@ const products = [
     },
     {
         productName: "Loaded Candy Pineapple",
-        price: 20.00,
+        price: 16.00,
         category: "Candy Pineapple",
         inStock: true
     },
     {
-        productName: "Strawberry Lemonade",
-        price: 6.00,
+        productName: "Classic Lemonade",
+        price: 4.00,
         category: "Drinks",
-        inStock: false
+        inStock: true
+    },
+    {
+        productName: "Pineapple Lemonade",
+        price: 5.00,
+        category: "Drinks",
+        inStock: true
+    },
+    {
+        productName: "Soft Drink",
+        price: 2.00,
+        category: "Drinks",
+        inStock: true
     }
 ];
 
+
 // Cart
 const cart = [];
+
 
 // Show Products
 console.log("Products:", products);
@@ -116,6 +130,8 @@ function renderProducts(productsToDisplay) {
         productGrid.appendChild(productCard);
     });
 }
+
+
 // Create Category Filters
 function createCategoryFilters() {
     const filterContainer = document.getElementById("category-filters");
@@ -124,7 +140,7 @@ function createCategoryFilters() {
     const allButton = document.createElement("button");
     allButton.textContent = "All";
 
-    // Shows all products when All is clicked
+    // Shows all products
     allButton.addEventListener("click", function() {
         renderProducts(products);
     });
@@ -149,12 +165,14 @@ function createCategoryFilters() {
         renderProducts(filteredProducts);
     });
 
-    // Adds the buttons to the webpage
+    // Adds the filter buttons to the webpage
     filterContainer.appendChild(allButton);
     filterContainer.appendChild(pineappleButton);
     filterContainer.appendChild(drinksButton);
 }
-// Creates the category buttons
+
+
+// Creates category buttons
 createCategoryFilters();
 
 // Displays all products when the page first loads
