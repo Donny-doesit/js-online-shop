@@ -147,7 +147,26 @@ function renderProducts(productsToDisplay) {
         productGrid.appendChild(productCard);
     });
 }
+// Today's Pick
+function showTodaysPick() {
+    const todaysPick = document.getElementById("todays-pick");
 
+    todaysPick.innerHTML =
+        "<h2>🍍 Today's Pick</h2>" +
+        "<h3>Classic Candy Pineapple</h3>" +
+        "<p>We've picked a favorite for you - $12.00</p>";
+
+    // Creates the Today's Pick button
+    const pickButton = document.createElement("button");
+    pickButton.textContent = "Add Today's Pick";
+
+    // Adds the Classic Candy Pineapple when clicked
+    pickButton.addEventListener("click", function() {
+        addToCart("Classic Candy Pineapple");
+    });
+
+    todaysPick.appendChild(pickButton);
+}
 
 // Create Category Filters
 function createCategoryFilters() {
@@ -204,9 +223,11 @@ function createCategoryFilters() {
 }
 
 
+// Displays Today's Pick
+showTodaysPick();
+
 // Creates the category filter buttons
 createCategoryFilters();
 
-
-// Displays all 6 products when the page loads
+// Displays all 6 products
 renderProducts(products);
