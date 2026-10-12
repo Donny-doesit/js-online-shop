@@ -1,30 +1,69 @@
 
-import { products } from "./products.js";
-import { cart, addToCart, viewCart } from "./cart.js";
+import { loadProducts } from "./products.js";
+import { cart, addToCart, removeFromCart, viewCart } from "./cart.js";
 
-// ~ Update the cart counter displayed in the header.
+// ~ Store products retrieved from the API.
+let products = [];
+
+// ~ Update the number of items displayed in the header.
 function updateCartCount() {
-    document.getElementById("cart-count").textContent = cart.length;
+    const count = cart.reduce(function(total, item) {
+        return total + item.quantity;
+    }, 0);
+
+    document.getElementById("cart-count").textContent = count;
 }
 
-// ~ Add a selected product and display feedback to the customer.
+// ~ Add a product and update the cart on the page.
 function handleAddToCart(productName) {
     const message = document.getElementById("error-message");
 
     try {
-        const product = addToCart(productName);
+        addToCart(productName, products);
         message.textContent = "";
-        console.log(product.productName + " added to cart.");
-
+        renderCart();
     } catch (error) {
         message.textContent = error.message;
-
     } finally {
         updateCartCount();
     }
 }
 
-// ~ Build the product cards using the selected products.
+// ~ Display all items currently in the cart.
+function renderCart() {
+    const cartContainer = document.getElementById("cart-items");
+    const cartTotal = document.getElementById("cart-total");
+
+    cartContainer.innerHTML = "";
+
+    cart.forEach(function(item) {
+        const cartItem = document.createElement("div");
+
+        const itemText = document.createElement("span");
+        itemText.textContent =
+            item.productName + " - $" +
+            item.price.toFixed(2) +
+            " x " + item.quantity;
+
+        const removeButton = document.createElement("button");
+        removeButton.textContent = "Remove";
+
+        removeButton.addEventListener("click", function() {
+            removeFromCart(item.productName);
+            renderCart();
+            updateCartCount();
+        });
+
+        cartItem.appendChild(itemText);
+        cartItem.appendChild(removeButton);
+        cartContainer.appendChild(cartItem);
+    });
+
+    const total = viewCart();
+    cartTotal.textContent = "Cart Total: $" + total.toFixed(2);
+}
+
+// ~ Build product cards from API products.
 function renderProducts(productsToDisplay) {
     const productGrid = document.getElementById("product-grid");
     productGrid.innerHTML = "";
@@ -32,36 +71,54 @@ function renderProducts(productsToDisplay) {
     productsToDisplay.forEach(function(product) {
         const productCard = document.createElement("div");
 
-        productCard.innerHTML =
-            "<h3>" + product.productName + "</h3>" +
-            "<p>Category: " + product.category + "</p>" +
-            "<p>Price: $" + product.price.toFixed(2) + "</p>";
+        const title = document.createElement("h3");
+        title.textContent = product.productName;
+
+        const category = document.createElement("p");
+        category.textContent = "Category: " + product.category;
+
+        const price = document.createElement("p");
+        price.textContent = "Price: $" + product.price.toFixed(2);
+
+        const image = document.createElement("img");
+        image.src = product.thumbnail;
+        image.alt = product.productName;
+        image.width = 120;
 
         const addButton = document.createElement("button");
         addButton.textContent = "Add to Cart";
+        addButton.disabled = !product.inStock;
 
         addButton.addEventListener("click", function() {
             handleAddToCart(product.productName);
         });
 
+        productCard.appendChild(image);
+        productCard.appendChild(title);
+        productCard.appendChild(category);
+        productCard.appendChild(price);
         productCard.appendChild(addButton);
+
         productGrid.appendChild(productCard);
     });
 }
 
-// ~ Filter the store's products by category.
+// ~ Filter products by category.
 function filterByCategory(category) {
     return products.filter(function(product) {
         return product.category === category;
     });
 }
 
-// ~ Create buttons for browsing the product categories.
+// ~ Build filter buttons from the API categories.
 function createCategoryFilters() {
     const filterContainer = document.getElementById("category-filters");
     filterContainer.innerHTML = "";
 
-    const categories = ["All", "Candy Pineapple", "Drinks"];
+    const categories = [
+        "All",
+        ...new Set(products.map(product => product.category))
+    ];
 
     categories.forEach(function(category) {
         const button = document.createElement("button");
@@ -79,27 +136,52 @@ function createCategoryFilters() {
     });
 }
 
-// ~ Display the store's featured pineapple.
+// ~ Display a featured product from the API.
 function showTodaysPick() {
     const todaysPick = document.getElementById("todays-pick");
+    todaysPick.innerHTML = "";
 
-    todaysPick.innerHTML =
-        "<h2>🍍 Today's Pick</h2>" +
-        "<h3>Classic Candy Pineapple</h3>" +
-        "<p>We've picked a favorite for you - $12.00</p>";
+    const featured = products.find(product => product.inStock);
+
+    if (!featured) {
+        todaysPick.textContent = "No featured product available.";
+        return;
+    }
+
+    const heading = document.createElement("h2");
+    heading.textContent = "Today's Pick";
+
+    const description = document.createElement("p");
+    description.textContent =
+        featured.productName + " - $" + featured.price.toFixed(2);
 
     const pickButton = document.createElement("button");
     pickButton.textContent = "Add Today's Pick";
 
     pickButton.addEventListener("click", function() {
-        handleAddToCart("Classic Candy Pineapple");
+        handleAddToCart(featured.productName);
     });
 
+    todaysPick.appendChild(heading);
+    todaysPick.appendChild(description);
     todaysPick.appendChild(pickButton);
 }
 
-// ~ Start the storefront.
-createCategoryFilters();
-showTodaysPick();
-renderProducts(products);
-updateCartCount();
+// ~ Load API products before displaying the storefront.
+async function startShop() {
+    products = await loadProducts();
+
+    createCategoryFilters();
+    showTodaysPick();
+    renderProducts(products);
+    renderCart();
+    updateCartCount();
+
+    if (products.length === 0) {
+        document.getElementById("error-message").textContent =
+            "Products are unavailable right now. Please try again later.";
+    }
+}
+
+// ~ Start the application.
+startShop();
