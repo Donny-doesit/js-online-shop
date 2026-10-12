@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,8 +13,8 @@
 
     <nav>
         <a href="#">Home</a>
-        <a href="#">Shop</a>
-        <a href="#">
+        <a href="#product-grid">Shop</a>
+        <a href="#shopping-cart">
             Cart (<span id="cart-count">0</span>)
         </a>
     </nav>
@@ -22,18 +23,31 @@
         <h2>Welcome to My Shop</h2>
         <p>Browse our available products.</p>
 
-       <!-- Category buttons will appear here -->
-<div id="category-filters"></div>
+        <!-- ~ Category buttons will appear here -->
+        <div id="category-filters"></div>
 
-<!-- Today's Pick will appear here -->
-<div id="todays-pick"></div>
+        <!-- ~ Featured product will appear here -->
+        <div id="todays-pick"></div>
 
-<!-- Product cards will appear here -->
-<div id="product-grid"></div>
+        <!-- ~ Product cards will appear here -->
+        <div id="product-grid"></div>
+
+        <!-- ~ Display errors to the customer -->
         <p id="error-message" aria-live="polite"></p>
+
+        <!-- ~ Shopping cart section -->
+        <section id="shopping-cart">
+            <h2>Shopping Cart</h2>
+
+            <!-- ~ Cart items and Remove buttons -->
+            <div id="cart-items"></div>
+
+            <!-- ~ Running total -->
+            <p id="cart-total">Cart Total: $0.00</p>
+        </section>
     </main>
 
-   <script type="module" src="app.js"></script>
+    <script type="module" src="app.js"></script>
 
 </body>
 </html>
