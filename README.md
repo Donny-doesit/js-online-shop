@@ -35,8 +35,7 @@ The final version retrieves product information from the DummyJSON API and allow
 ## API Integration
 
 The application retrieves product information from:
-
-https://dummyjson.com/products
+a mock source
 
 The `loadProducts()` function uses `fetch()` to request product data. The response is converted into JavaScript objects using `response.json()` and organized with `map()`.
 
